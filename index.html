@@ -3,250 +3,329 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Interactive Cool Web Page</title>
+    <title>Next-Gen Interactive Dashboard</title>
     <style>
-        /* Modern Reset & Dark Theme */
+        /* --- Modern CSS Core Setup --- */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
         }
 
         body {
-            background: linear-gradient(135deg, #0f172a, #1e1b4b);
-            color: #f8fafc;
+            background: radial-gradient(circle at 50% 50%, #111827, #030712);
+            color: #f3f4f6;
             min-height: 100vh;
             display: flex;
-            flex-direction: column;
-            align-items: center;
             justify-content: center;
+            align-items: center;
             overflow-x: hidden;
-            padding: 20px;
+            padding: 40px 20px;
+            perspective: 1000px; /* Crucial for 3D layout depths */
         }
 
-        /* Smooth Entry Animation */
-        .container {
+        /* --- Canvas Particle Background --- */
+        #particleCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
             width: 100%;
-            max-width: 600px;
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 16px;
-            padding: 30px;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        /* --- Glassmorphism Dashboard Layout --- */
+        .dashboard {
+            width: 100%;
+            max-width: 1000px;
+            background: rgba(17, 24, 39, 0.6);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 24px;
+            padding: 40px;
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 30px;
+            transform-style: preserve-3d;
+            animation: appEntrance 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        @keyframes appEntrance {
+            from { opacity: 0; transform: translateY(40px) rotateX(4deg); }
+            to { opacity: 1; transform: translateY(0) rotateX(0); }
+        }
+
+        /* --- Header Section --- */
+        .header {
             text-align: center;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
-            animation: fadeInUp 1s ease forwards;
-            opacity: 0;
-            transform: translateY(20px);
+            margin-bottom: 10px;
         }
 
-        @keyframes fadeInUp {
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        h1 {
-            font-size: 2.5rem;
-            background: linear-gradient(to right, #38bdf8, #818cf8);
+        .header h1 {
+            font-size: 3rem;
+            font-weight: 800;
+            letter-spacing: -1px;
+            background: linear-gradient(135deg, #60a5fa, #c084fc, #f43f5e);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            margin-bottom: 15px;
+            margin-bottom: 8px;
         }
 
-        p {
-            color: #94a3b8;
-            margin-bottom: 25px;
+        .header p {
+            color: #9ca3af;
+            font-size: 1.1rem;
         }
 
-        /* Animated Interactive Dropdown */
-        .dropdown {
-            position: relative;
-            display: inline-block;
-            margin-bottom: 30px;
+        /* --- Grid Grid Elements --- */
+        .grid-layout {
+            display: grid;
+            grid-template-columns: 1fr 1.2fr;
+            gap: 25px;
         }
 
-        .dropbtn {
-            background: #4f46e5;
-            color: white;
-            padding: 12px 24px;
-            font-size: 1rem;
-            font-weight: 600;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+        @media (max-width: 768px) {
+            .grid-layout { grid-template-columns: 1fr; }
         }
 
-        .dropbtn:hover {
-            background: #4338ca;
-            transform: translateY(-2px);
+        /* --- Interactive 3D Card Card --- */
+        .card-3d-wrapper {
+            perspective: 1000px;
         }
 
-        .dropdown-content {
-            position: absolute;
-            top: 110%;
-            left: 50%;
-            transform: translateX(-50%) scale(0.95);
-            background: #1e293b;
-            min-width: 200px;
-            border-radius: 8px;
+        .card-3d {
+            background: linear-gradient(135deg, rgba(255,255,255,0.05), rgba(255,255,255,0.01));
             border: 1px solid rgba(255, 255, 255, 0.1);
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+            border-radius: 20px;
+            padding: 30px;
+            height: 100%;
+            min-height: 280px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            cursor: pointer;
+            transform-style: preserve-3d;
+            transition: transform 0.15s ease-out, box-shadow 0.3s;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+        }
+
+        .card-3d:hover {
+            box-shadow: 0 25px 50px rgba(96, 165, 250, 0.15);
+        }
+
+        .card-3d h2 {
+            font-size: 1.5rem;
+            color: #3b82f6;
+            transform: translateZ(50px); /* Pushes elements out in 3D Space */
+            transition: transform 0.3s;
+        }
+
+        .card-3d .badge {
+            align-self: flex-start;
+            background: rgba(59, 130, 246, 0.2);
+            color: #60a5fa;
+            padding: 6px 14px;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transform: translateZ(30px);
+        }
+
+        .card-3d p {
+            color: #cbd5e1;
+            transform: translateZ(40px);
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
+        /* --- Modern Functional Dropdown Actions --- */
+        .controls-panel {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            padding: 25px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .custom-select-wrapper {
+            position: relative;
+        }
+
+        .select-trigger {
+            background: #1f2937;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 14px 20px;
+            border-radius: 12px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+
+        .select-trigger:hover, .select-trigger.active {
+            border-color: #a855f7;
+            box-shadow: 0 0 15px rgba(168, 85, 247, 0.2);
+        }
+
+        .select-options {
+            position: absolute;
+            top: 115%;
+            left: 0;
+            width: 100%;
+            background: #111827;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            overflow: hidden;
             opacity: 0;
             visibility: hidden;
-            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-            z-index: 10;
+            transform: translateY(-10px);
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            z-index: 100;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
 
-        /* Class toggled by JavaScript */
-        .dropdown-content.show {
+        .select-options.open {
             opacity: 1;
             visibility: visible;
-            transform: translateX(-50%) scale(1);
+            transform: translateY(0);
         }
 
-        .dropdown-content a {
-            color: #cbd5e1;
-            padding: 12px 16px;
-            text-decoration: none;
-            display: block;
-            transition: background 0.2s;
-            text-align: left;
+        .option {
+            padding: 14px 20px;
+            cursor: pointer;
+            transition: background 0.2s, color 0.2s;
+            color: #9ca3af;
         }
 
-        .dropdown-content a:first-child { border-radius: 8px 8px 0 0; }
-        .dropdown-content a:last-child { border-radius: 0 0 8px 8px; }
-
-        .dropdown-content a:hover {
-            background: rgba(255, 255, 255, 0.08);
-            color: #38bdf8;
+        .option:hover {
+            background: rgba(168, 85, 247, 0.1);
+            color: #d8b4fe;
         }
 
-        /* Drag and Drop Zone Container */
-        .drag-zone {
-            display: flex;
-            gap: 20px;
-            justify-content: center;
-            margin-top: 20px;
-        }
-
-        .box {
-            width: 140px;
-            height: 140px;
-            border: 2px dashed rgba(255, 255, 255, 0.2);
+        /* --- Live Dynamic Status Counter --- */
+        .status-display {
+            background: rgba(0, 0, 0, 0.2);
             border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: background 0.2s, border-color 0.2s;
+            padding: 15px;
+            border-left: 4px solid #60a5fa;
         }
 
-        .box.drag-over {
-            background: rgba(56, 189, 248, 0.1);
-            border-color: #38bdf8;
-        }
-
-        /* Draggable Element */
-        .draggable {
-            width: 100px;
-            height: 100px;
-            background: linear-gradient(135deg, #f43f5e, #fb7185);
-            border-radius: 8px;
-            cursor: grab;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+        .status-label {
+            font-size: 0.8rem;
+            color: #616e85;
+            text-transform: uppercase;
             font-weight: bold;
-            box-shadow: 0 4px 10px rgba(244, 63, 94, 0.4);
-            transition: transform 0.1s;
         }
 
-        .draggable:active {
+        .status-value {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #f3f4f6;
+            margin-top: 4px;
+        }
+
+        /* --- Advanced Drag and Drop Kanban Board --- */
+        .kanban-board {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-top: 10px;
+        }
+
+        @media (max-width: 540px) {
+            .kanban-board { grid-template-columns: 1fr; }
+        }
+
+        .kanban-column {
+            background: rgba(0, 0, 0, 0.15);
+            border: 2px dashed rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            padding: 20px;
+            min-height: 180px;
+            transition: all 0.3s;
+        }
+
+        .kanban-column.drag-over {
+            background: rgba(96, 165, 250, 0.05);
+            border-color: #60a5fa;
+        }
+
+        .column-title {
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #64748b;
+            margin-bottom: 15px;
+            font-weight: 700;
+        }
+
+        .draggable-task {
+            background: linear-gradient(135deg, #1e293b, #0f172a);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 16px;
+            border-radius: 12px;
+            cursor: grab;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .draggable-task:active {
             cursor: grabbing;
-            transform: scale(0.95);
+            transform: scale(0.98);
+            border-color: #f43f5e;
+        }
+
+        .task-dot {
+            width: 8px;
+            height: 8px;
+            background: #f43f5e;
+            border-radius: 50%;
+            box-shadow: 0 0 8px #f43f5e;
         }
     </style>
 </head>
 <body>
 
-    <div class="container">
-        <h1>Hello, Tech World!</h1>
-        <p>This page features modern UI effects including custom animations, interactive dropdowns, and drag-and-drop actions.</p>
+    <!-- Particle VFX Layer -->
+    <canvas id="particleCanvas"></canvas>
 
-        <!-- Dropdown Menu Section -->
-        <div class="dropdown">
-            <button class="dropbtn" onclick="toggleDropdown()">Click Options 👇</button>
-            <div id="myDropdown" class="dropdown-content">
-                <a href="#" onclick="changeTheme('#38bdf8')">Neon Blue Glow</a>
-                <a href="#" onclick="changeTheme('#a855f7')">Purple Vibes</a>
-                <a href="#" onclick="changeTheme('#10b981')">Emerald Forest</a>
-            </div>
+    <!-- Main Container Setup -->
+    <div class="dashboard">
+        
+        <div class="header">
+            <h1>Interactive Ecosystem</h1>
+            <p>Move your cursor, change configurations, and workflow items layout.</p>
         </div>
 
-        <p style="font-size: 0.9rem; color: #64748b;">Drag the red box into the empty square:</p>
-
-        <!-- Drag and Drop Section -->
-        <div class="drag-zone">
-            <div class="box" id="box1" ondragover="allowDrop(event)" ondragleave="clearHover(event)" ondrop="drop(event)">
-                <div class="draggable" id="dragItem" draggable="true" ondragstart="drag(event)">Drag Me</div>
+        <div class="grid-layout">
+            
+            <!-- Left Side Element: 3D Interactive Component Layer -->
+            <div class="card-3d-wrapper">
+                <div class="card-3d" id="tiltCard">
+                    <div class="badge">3D Matrix Engine</div>
+                    <h2>Hover & Tilt Canvas</h2>
+                    <p>This panel responds dynamically in physical 3D space relative to coordinates tracks on your desktop mouse movements.</p>
+                </div>
             </div>
-            <div class="box" id="box2" ondragover="allowDrop(event)" ondragleave="clearHover(event)" ondrop="drop(event)"></div>
-        </div>
-    </div>
 
-    <script>
-        // Toggle the animated dropdown visibility
-        function toggleDropdown() {
-            document.getElementById("myDropdown").classList.toggle("show");
-        }
-
-        // Close dropdown when clicking anywhere outside of it
-        window.onclick = function(event) {
-            if (!event.target.matches('.dropbtn')) {
-                var dropdowns = document.getElementsByClassName("dropdown-content");
-                for (var i = 0; i < dropdowns.length; i++) {
-                    var openDropdown = dropdowns[i];
-                    if (openDropdown.classList.contains('show')) {
-                        openDropdown.classList.remove('show');
-                    }
-                }
-            }
-        }
-
-        // Dynamic functional behavior: Changes primary text color glow
-        function changeTheme(color) {
-            document.querySelector('h1').style.background = `linear-gradient(to right, ${color}, #818cf8)`;
-            document.querySelector('h1').style.webkitBackgroundClip = 'text';
-        }
-
-        // Drag and Drop Logic
-        function drag(ev) {
-            ev.dataTransfer.setData("text", ev.target.id);
-        }
-
-        function allowDrop(ev) {
-            ev.preventDefault();
-            ev.currentTarget.classList.add('drag-over');
-        }
-
-        function clearHover(ev) {
-            ev.currentTarget.classList.remove('drag-over');
-        }
-
-        function drop(ev) {
-            ev.preventDefault();
-            ev.currentTarget.classList.remove('drag-over');
-            var data = ev.dataTransfer.getData("text");
-            // Only allow dropping inside the empty boxes
-            if (ev.target.classList.contains('box')) {
-                ev.target.appendChild(document.getElementById(data));
-            }
-        }
-    </script>
-
-</body>
-</html>
+            <!-- Right Side Element: Settings Panel & Functional Triggers -->
+            <div class="controls-panel">
+                
+                <!-- Modern Styled Custom UI Dropdown Actions -->
+                <div class="custom-select-wrapper">
+                    <div class="select-trigger" id="dropdownBtn" onclick="toggleDropdown(event)">
+                        <span id="selectedLabel">Select Engine Variant</span>
+                        <span>▼</span>
+                    </div>
