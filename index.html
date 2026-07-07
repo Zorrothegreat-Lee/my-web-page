@@ -3,12 +3,250 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Web Page</title>
+    <title>Interactive Cool Web Page</title>
+    <style>
+        /* Modern Reset & Dark Theme */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0f172a, #1e1b4b);
+            color: #f8fafc;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            overflow-x: hidden;
+            padding: 20px;
+        }
+
+        /* Smooth Entry Animation */
+        .container {
+            width: 100%;
+            max-width: 600px;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 30px;
+            text-align: center;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+            animation: fadeInUp 1s ease forwards;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            background: linear-gradient(to right, #38bdf8, #818cf8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 15px;
+        }
+
+        p {
+            color: #94a3b8;
+            margin-bottom: 25px;
+        }
+
+        /* Animated Interactive Dropdown */
+        .dropdown {
+            position: relative;
+            display: inline-block;
+            margin-bottom: 30px;
+        }
+
+        .dropbtn {
+            background: #4f46e5;
+            color: white;
+            padding: 12px 24px;
+            font-size: 1rem;
+            font-weight: 600;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+        }
+
+        .dropbtn:hover {
+            background: #4338ca;
+            transform: translateY(-2px);
+        }
+
+        .dropdown-content {
+            position: absolute;
+            top: 110%;
+            left: 50%;
+            transform: translateX(-50%) scale(0.95);
+            background: #1e293b;
+            min-width: 200px;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+            z-index: 10;
+        }
+
+        /* Class toggled by JavaScript */
+        .dropdown-content.show {
+            opacity: 1;
+            visibility: visible;
+            transform: translateX(-50%) scale(1);
+        }
+
+        .dropdown-content a {
+            color: #cbd5e1;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+            transition: background 0.2s;
+            text-align: left;
+        }
+
+        .dropdown-content a:first-child { border-radius: 8px 8px 0 0; }
+        .dropdown-content a:last-child { border-radius: 0 0 8px 8px; }
+
+        .dropdown-content a:hover {
+            background: rgba(255, 255, 255, 0.08);
+            color: #38bdf8;
+        }
+
+        /* Drag and Drop Zone Container */
+        .drag-zone {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .box {
+            width: 140px;
+            height: 140px;
+            border: 2px dashed rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s, border-color 0.2s;
+        }
+
+        .box.drag-over {
+            background: rgba(56, 189, 248, 0.1);
+            border-color: #38bdf8;
+        }
+
+        /* Draggable Element */
+        .draggable {
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(135deg, #f43f5e, #fb7185);
+            border-radius: 8px;
+            cursor: grab;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            box-shadow: 0 4px 10px rgba(244, 63, 94, 0.4);
+            transition: transform 0.1s;
+        }
+
+        .draggable:active {
+            cursor: grabbing;
+            transform: scale(0.95);
+        }
+    </style>
 </head>
 <body>
 
-    <h1>Hello, World!</h1>
-    <p>This is a normal paragraph in HTML.</p>
+    <div class="container">
+        <h1>Hello, Tech World!</h1>
+        <p>This page features modern UI effects including custom animations, interactive dropdowns, and drag-and-drop actions.</p>
+
+        <!-- Dropdown Menu Section -->
+        <div class="dropdown">
+            <button class="dropbtn" onclick="toggleDropdown()">Click Options 👇</button>
+            <div id="myDropdown" class="dropdown-content">
+                <a href="#" onclick="changeTheme('#38bdf8')">Neon Blue Glow</a>
+                <a href="#" onclick="changeTheme('#a855f7')">Purple Vibes</a>
+                <a href="#" onclick="changeTheme('#10b981')">Emerald Forest</a>
+            </div>
+        </div>
+
+        <p style="font-size: 0.9rem; color: #64748b;">Drag the red box into the empty square:</p>
+
+        <!-- Drag and Drop Section -->
+        <div class="drag-zone">
+            <div class="box" id="box1" ondragover="allowDrop(event)" ondragleave="clearHover(event)" ondrop="drop(event)">
+                <div class="draggable" id="dragItem" draggable="true" ondragstart="drag(event)">Drag Me</div>
+            </div>
+            <div class="box" id="box2" ondragover="allowDrop(event)" ondragleave="clearHover(event)" ondrop="drop(event)"></div>
+        </div>
+    </div>
+
+    <script>
+        // Toggle the animated dropdown visibility
+        function toggleDropdown() {
+            document.getElementById("myDropdown").classList.toggle("show");
+        }
+
+        // Close dropdown when clicking anywhere outside of it
+        window.onclick = function(event) {
+            if (!event.target.matches('.dropbtn')) {
+                var dropdowns = document.getElementsByClassName("dropdown-content");
+                for (var i = 0; i < dropdowns.length; i++) {
+                    var openDropdown = dropdowns[i];
+                    if (openDropdown.classList.contains('show')) {
+                        openDropdown.classList.remove('show');
+                    }
+                }
+            }
+        }
+
+        // Dynamic functional behavior: Changes primary text color glow
+        function changeTheme(color) {
+            document.querySelector('h1').style.background = `linear-gradient(to right, ${color}, #818cf8)`;
+            document.querySelector('h1').style.webkitBackgroundClip = 'text';
+        }
+
+        // Drag and Drop Logic
+        function drag(ev) {
+            ev.dataTransfer.setData("text", ev.target.id);
+        }
+
+        function allowDrop(ev) {
+            ev.preventDefault();
+            ev.currentTarget.classList.add('drag-over');
+        }
+
+        function clearHover(ev) {
+            ev.currentTarget.classList.remove('drag-over');
+        }
+
+        function drop(ev) {
+            ev.preventDefault();
+            ev.currentTarget.classList.remove('drag-over');
+            var data = ev.dataTransfer.getData("text");
+            // Only allow dropping inside the empty boxes
+            if (ev.target.classList.contains('box')) {
+                ev.target.appendChild(document.getElementById(data));
+            }
+        }
+    </script>
 
 </body>
 </html>
